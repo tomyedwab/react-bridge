@@ -9,7 +9,7 @@ var _ = require('underscore'),
 
 var app = express();
 
-app.use(bodyParser());
+app.use(bodyParser({limit: '50mb'}));
 
 app.get('/', function(req, res) {
     res.send('Hello, World');
@@ -17,7 +17,8 @@ app.get('/', function(req, res) {
 
 var fetchScriptHttps = function(script, success, error) {
     console.log("Loading ", script);
-    var req = https.request({host: 'www.khanacademy.org', path: script},
+    // TODO(tom) Validate this is a valid KA url
+    var req = https.request(script,
         function(scriptRes) {
             var scriptSrc = "";
             scriptRes.setEncoding('utf8');
