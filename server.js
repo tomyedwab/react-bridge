@@ -57,11 +57,7 @@ var chain = function(fn, scriptList, success, error, accum) {
 app.post('/render', function(req, res) {
     var moduleToLoad = req.body.module;
     var params = req.body.params;
-    // TODO(tom) Swap these!
-    //var scriptsToFetch = req.body.packages;
-    var scriptsToFetch = _.map(req.body.packages, function(package) {
-        return "/home/ubuntu/react-bridge/packages/" + package.substr("http://localhost:5000/genfiles/readable_js_packages_dev/en/".length);
-    });
+    var scriptsToFetch = req.body.packages;
 
     // Init sandbox
     // Create a browser-like environment for initial setup code to work
@@ -81,9 +77,7 @@ app.post('/render', function(req, res) {
     context = vm.createContext(sandbox);
 
     // Load the scripts
-    // TODO(tom) Swap these!
-    //chain(fetchScriptHttps, scriptsToFetch, function(scriptSources) {
-    chain(fetchScriptFile, scriptsToFetch, function(scriptSources) {
+    chain(fetchScriptHttps, scriptsToFetch, function(scriptSources) {
         try {
             for (var i = 0; i < scriptSources.length; i++) {
                 vm.runInContext(scriptSources[i][1], context, scriptSources[i][0]);
@@ -113,7 +107,7 @@ app.post('/render', function(req, res) {
     });
 });
 
-var server = app.listen(80, function() {
+var server = app.listen(2380, function() {
     var host = server.address().address;
     var port = server.address().port;
     console.log('React service listening at http://%s:%s', host, port);
